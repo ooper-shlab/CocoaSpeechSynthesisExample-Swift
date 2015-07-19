@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>LocaleIdentifier</key>
+    <string>en_US</string>
+    <key>ModificationDate</key>
+    <string>2006-12-21 11:59:25 -0800</string>
+    <key>Pronunciations</key>
+    <array>
+        <dict>
+            <key>Phonemes</key>
+            <string>_h1EY_y1UW</string>
+            <key>Spelling</key>
+            <string>Hello</string>
+        </dict>
+    </array>
+    <key>Abbreviations</key>
+    <array>
+        <dict>
+            <key>Phonemes</key>
+            <string>_1OWsAEkz</string>
+            <key>Spelling</key>
+            <string>OSAX</string>
+        </dict>
+    </array>
+</dict>
+</plist>

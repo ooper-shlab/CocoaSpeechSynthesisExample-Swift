@@ -1,0 +1,409 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		534806E61B2F565A00620ECD /* Buster.plist in Resources */ = {isa = PBXBuildFile; fileRef = 534806DE1B2F565A00620ECD /* Buster.plist */; };
+		534806E71B2F565A00620ECD /* BusterClosed.png in Resources */ = {isa = PBXBuildFile; fileRef = 534806DF1B2F565A00620ECD /* BusterClosed.png */; };
+		534806E81B2F565A00620ECD /* BusterIdle1.png in Resources */ = {isa = PBXBuildFile; fileRef = 534806E01B2F565A00620ECD /* BusterIdle1.png */; };
+		534806E91B2F565A00620ECD /* BusterIdle2.png in Resources */ = {isa = PBXBuildFile; fileRef = 534806E11B2F565A00620ECD /* BusterIdle2.png */; };
+		534806EA1B2F565A00620ECD /* BusterIdle3.png in Resources */ = {isa = PBXBuildFile; fileRef = 534806E21B2F565A00620ECD /* BusterIdle3.png */; };
+		534806EB1B2F565A00620ECD /* BusterIdle4.png in Resources */ = {isa = PBXBuildFile; fileRef = 534806E31B2F565A00620ECD /* BusterIdle4.png */; };
+		534806EC1B2F565A00620ECD /* BusterOpen.png in Resources */ = {isa = PBXBuildFile; fileRef = 534806E41B2F565A00620ECD /* BusterOpen.png */; };
+		534806ED1B2F565A00620ECD /* BusterSleep.png in Resources */ = {isa = PBXBuildFile; fileRef = 534806E51B2F565A00620ECD /* BusterSleep.png */; };
+		534806F41B2F567700620ECD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 534806EE1B2F567700620ECD /* InfoPlist.strings */; };
+		534806F51B2F567700620ECD /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 534806F01B2F567700620ECD /* MainMenu.xib */; };
+		534806F61B2F567700620ECD /* SpeakingTextWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 534806F21B2F567700620ECD /* SpeakingTextWindow.xib */; };
+		534806FA1B2F56BD00620ECD /* CocoaSpeechSynthesisExample.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 534806F91B2F56BD00620ECD /* CocoaSpeechSynthesisExample.entitlements */; };
+		538989500BA87C1D0040EBBD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		538989510BA87C1D0040EBBD /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00FA9A72FF714A0C11CA1586 /* ApplicationServices.framework */; };
+		D73352441B567242007DDC23 /* SpeakingCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73352431B567242007DDC23 /* SpeakingCharacterView.swift */; };
+		D745C84A1B5BD6FC00AD9319 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D745C8491B5BD6FC00AD9319 /* main.swift */; };
+		D745C84C1B5BE11C00AD9319 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D745C84B1B5BE11C00AD9319 /* LICENSE.txt */; };
+		D745C84E1B5BE13100AD9319 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = D745C84D1B5BE13100AD9319 /* readme.txt */; };
+		D789048F1B59E63B0014075E /* SpeakingTextWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789048E1B59E63B0014075E /* SpeakingTextWindow.swift */; };
+		D79D813E1B5A761700D509B0 /* FourCharCode+StringLiteralConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79D813D1B5A761700D509B0 /* FourCharCode+StringLiteralConvertible.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00FA9A72FF714A0C11CA1586 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
+		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		534806DB1B2F563A00620ECD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoaSpeechSynthesisExample/Info.plist; sourceTree = "<group>"; };
+		534806DE1B2F565A00620ECD /* Buster.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Buster.plist; path = CocoaSpeechSynthesisExample/Characters/Buster/Buster.plist; sourceTree = "<group>"; };
+		534806DF1B2F565A00620ECD /* BusterClosed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BusterClosed.png; path = CocoaSpeechSynthesisExample/Characters/Buster/BusterClosed.png; sourceTree = "<group>"; };
+		534806E01B2F565A00620ECD /* BusterIdle1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BusterIdle1.png; path = CocoaSpeechSynthesisExample/Characters/Buster/BusterIdle1.png; sourceTree = "<group>"; };
+		534806E11B2F565A00620ECD /* BusterIdle2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BusterIdle2.png; path = CocoaSpeechSynthesisExample/Characters/Buster/BusterIdle2.png; sourceTree = "<group>"; };
+		534806E21B2F565A00620ECD /* BusterIdle3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BusterIdle3.png; path = CocoaSpeechSynthesisExample/Characters/Buster/BusterIdle3.png; sourceTree = "<group>"; };
+		534806E31B2F565A00620ECD /* BusterIdle4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BusterIdle4.png; path = CocoaSpeechSynthesisExample/Characters/Buster/BusterIdle4.png; sourceTree = "<group>"; };
+		534806E41B2F565A00620ECD /* BusterOpen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BusterOpen.png; path = CocoaSpeechSynthesisExample/Characters/Buster/BusterOpen.png; sourceTree = "<group>"; };
+		534806E51B2F565A00620ECD /* BusterSleep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BusterSleep.png; path = CocoaSpeechSynthesisExample/Characters/Buster/BusterSleep.png; sourceTree = "<group>"; };
+		534806EF1B2F567700620ECD /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = CocoaSpeechSynthesisExample/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		534806F11B2F567700620ECD /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = CocoaSpeechSynthesisExample/English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		534806F31B2F567700620ECD /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = CocoaSpeechSynthesisExample/English.lproj/SpeakingTextWindow.xib; sourceTree = "<group>"; };
+		534806F71B2F568500620ECD /* ReadMe.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = ReadMe.md; sourceTree = "<group>"; };
+		534806F91B2F56BD00620ECD /* CocoaSpeechSynthesisExample.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = CocoaSpeechSynthesisExample.entitlements; path = CocoaSpeechSynthesisExample/CocoaSpeechSynthesisExample.entitlements; sourceTree = "<group>"; };
+		538989590BA87C1D0040EBBD /* CocoaSpeechSynthesisExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoaSpeechSynthesisExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D73352431B567242007DDC23 /* SpeakingCharacterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakingCharacterView.swift; sourceTree = "<group>"; };
+		D745C8491B5BD6FC00AD9319 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		D745C84B1B5BE11C00AD9319 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		D745C84D1B5BE13100AD9319 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		D789048E1B59E63B0014075E /* SpeakingTextWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakingTextWindow.swift; sourceTree = "<group>"; };
+		D79D813D1B5A761700D509B0 /* FourCharCode+StringLiteralConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FourCharCode+StringLiteralConvertible.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5389894F0BA87C1D0040EBBD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				538989500BA87C1D0040EBBD /* Cocoa.framework in Frameworks */,
+				538989510BA87C1D0040EBBD /* ApplicationServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				00FA9A72FF714A0C11CA1586 /* ApplicationServices.framework */,
+				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A8FEA54F5311CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
+				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB0FE9D524F11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				538989590BA87C1D0040EBBD /* CocoaSpeechSynthesisExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A37F4AAFDCFA73011CA2CEA /* TempMultiDocApp */ = {
+			isa = PBXGroup;
+			children = (
+				D745C84D1B5BE13100AD9319 /* readme.txt */,
+				D745C84B1B5BE11C00AD9319 /* LICENSE.txt */,
+				534806F71B2F568500620ECD /* ReadMe.md */,
+				534806F91B2F56BD00620ECD /* CocoaSpeechSynthesisExample.entitlements */,
+				2A37F4ABFDCFA73011CA2CEA /* Classes */,
+				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
+				2A37F4B8FDCFA73011CA2CEA /* Resources */,
+				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
+				19C28FB0FE9D524F11CA2CBB /* Products */,
+			);
+			name = TempMultiDocApp;
+			sourceTree = "<group>";
+		};
+		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D789048E1B59E63B0014075E /* SpeakingTextWindow.swift */,
+				D73352431B567242007DDC23 /* SpeakingCharacterView.swift */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D745C8491B5BD6FC00AD9319 /* main.swift */,
+				D79D813D1B5A761700D509B0 /* FourCharCode+StringLiteralConvertible.swift */,
+				534806DB1B2F563A00620ECD /* Info.plist */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				534806EE1B2F567700620ECD /* InfoPlist.strings */,
+				534806F01B2F567700620ECD /* MainMenu.xib */,
+				534806F21B2F567700620ECD /* SpeakingTextWindow.xib */,
+				90B057000474C4B0003E2737 /* Buster */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
+				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		90B057000474C4B0003E2737 /* Buster */ = {
+			isa = PBXGroup;
+			children = (
+				534806DE1B2F565A00620ECD /* Buster.plist */,
+				534806DF1B2F565A00620ECD /* BusterClosed.png */,
+				534806E01B2F565A00620ECD /* BusterIdle1.png */,
+				534806E11B2F565A00620ECD /* BusterIdle2.png */,
+				534806E21B2F565A00620ECD /* BusterIdle3.png */,
+				534806E31B2F565A00620ECD /* BusterIdle4.png */,
+				534806E41B2F565A00620ECD /* BusterOpen.png */,
+				534806E51B2F565A00620ECD /* BusterSleep.png */,
+			);
+			name = Buster;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5389893D0BA87C1D0040EBBD /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5389893C0BA87C1D0040EBBD /* CocoaSpeechSynthesisExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 538989540BA87C1D0040EBBD /* Build configuration list for PBXNativeTarget "CocoaSpeechSynthesisExample" */;
+			buildPhases = (
+				5389893D0BA87C1D0040EBBD /* Headers */,
+				538989400BA87C1D0040EBBD /* Resources */,
+				5389894B0BA87C1D0040EBBD /* Sources */,
+				5389894F0BA87C1D0040EBBD /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CocoaSpeechSynthesisExample;
+			productInstallPath = "$(SYSTEM_DEVELOPER_DIR)/Examples/Speech/SpeechSynthesisExamples/CocoaSpeechSynthesisExample/";
+			productName = CocoaSpeechSynthesisExample;
+			productReference = 538989590BA87C1D0040EBBD /* CocoaSpeechSynthesisExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
+				TargetAttributes = {
+					5389893C0BA87C1D0040EBBD = {
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 873AFEA2087070D800936E38 /* Build configuration list for PBXProject "CocoaSpeechSynthesisExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+				English,
+			);
+			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* TempMultiDocApp */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5389893C0BA87C1D0040EBBD /* CocoaSpeechSynthesisExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		538989400BA87C1D0040EBBD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				534806ED1B2F565A00620ECD /* BusterSleep.png in Resources */,
+				534806F61B2F567700620ECD /* SpeakingTextWindow.xib in Resources */,
+				534806E71B2F565A00620ECD /* BusterClosed.png in Resources */,
+				534806F51B2F567700620ECD /* MainMenu.xib in Resources */,
+				D745C84E1B5BE13100AD9319 /* readme.txt in Resources */,
+				534806EB1B2F565A00620ECD /* BusterIdle4.png in Resources */,
+				D745C84C1B5BE11C00AD9319 /* LICENSE.txt in Resources */,
+				534806E81B2F565A00620ECD /* BusterIdle1.png in Resources */,
+				534806EC1B2F565A00620ECD /* BusterOpen.png in Resources */,
+				534806EA1B2F565A00620ECD /* BusterIdle3.png in Resources */,
+				534806E61B2F565A00620ECD /* Buster.plist in Resources */,
+				534806FA1B2F56BD00620ECD /* CocoaSpeechSynthesisExample.entitlements in Resources */,
+				534806E91B2F565A00620ECD /* BusterIdle2.png in Resources */,
+				534806F41B2F567700620ECD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5389894B0BA87C1D0040EBBD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D73352441B567242007DDC23 /* SpeakingCharacterView.swift in Sources */,
+				D745C84A1B5BD6FC00AD9319 /* main.swift in Sources */,
+				D789048F1B59E63B0014075E /* SpeakingTextWindow.swift in Sources */,
+				D79D813E1B5A761700D509B0 /* FourCharCode+StringLiteralConvertible.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		534806EE1B2F567700620ECD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				534806EF1B2F567700620ECD /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		534806F01B2F567700620ECD /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				534806F11B2F567700620ECD /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		534806F21B2F567700620ECD /* SpeakingTextWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				534806F31B2F567700620ECD /* English */,
+			);
+			name = SpeakingTextWindow.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		538989550BA87C1D0040EBBD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = CocoaSpeechSynthesisExample/CocoaSpeechSynthesisExample.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = "";
+				INFOPLIST_FILE = CocoaSpeechSynthesisExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = CocoaSpeechSynthesisExample;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		538989560BA87C1D0040EBBD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = CocoaSpeechSynthesisExample/CocoaSpeechSynthesisExample.entitlements;
+				INFOPLIST_FILE = CocoaSpeechSynthesisExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = CocoaSpeechSynthesisExample;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		873AFEA3087070D800936E38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		873AFEA4087070D800936E38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				RUN_CLANG_STATIC_ANALYZER = NO;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		538989540BA87C1D0040EBBD /* Build configuration list for PBXNativeTarget "CocoaSpeechSynthesisExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				538989550BA87C1D0040EBBD /* Debug */,
+				538989560BA87C1D0040EBBD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		873AFEA2087070D800936E38 /* Build configuration list for PBXProject "CocoaSpeechSynthesisExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				873AFEA3087070D800936E38 /* Debug */,
+				873AFEA4087070D800936E38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+}
