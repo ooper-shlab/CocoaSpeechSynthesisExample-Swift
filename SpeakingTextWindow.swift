@@ -16,65 +16,6 @@
 import Cocoa
 
 typealias SRefCon = UnsafePointer<Void>
-//### Using VoiceDescription causes Swift Abort trap: 6, so we need a workaround...
-typealias C = UInt8
-let Z: C = 0
-typealias Str63 = (C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C)
-let Zero64 = (Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z)
-typealias Str255 = (
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-    C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C)
-let Zero256 = (
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z,
-    Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z)
-//### See SpeechSynthesis.h
-struct MyVoiceDescription {
-    var length: Int32 = 0
-    var voice: (creator: OSType, id: OSType) = (0, 0)
-    var version: Int32 = 0
-    var name: Str63 = Zero64
-    var comment: Str255 = Zero256
-    var gender: Int16 = 0
-    var age: Int16 = 0
-    var script: Int16 = 0
-    var language: Int16 = 0
-    var region: Int16 = 0
-    var reserved: (Int32,Int32,Int32,Int32) = (0, 0, 0, 0)
-}
 
 private let kWordCallbackParamPosition = "ParamPosition"
 private let kWordCallbackParamLength = "ParamLength"
@@ -490,7 +431,7 @@ class SpeakingTextWindow: NSDocument {
         var theErr: OSErr = OSErr(noErr)
         
         if fCurrentlySpeaking {
-            var whereToStop: Int = 0
+            var whereToStop: Int32 = 0
             
             // Grab where to stop at value from radio buttons
             if fAfterWordRadioButton.intValue != 0 {
@@ -675,7 +616,7 @@ class SpeakingTextWindow: NSDocument {
             fCurrentlyPaused = false
             self.updateSpeakingControlState()
         } else {
-            var whereToPause: Int = 0
+            var whereToPause: Int32 = 0
             
             // Figure out where to stop from radio buttons
             if fAfterSentenceRadioButton.intValue != 0 {
@@ -1137,7 +1078,7 @@ class SpeakingTextWindow: NSDocument {
             }
             if theErr == OSErr(noErr) {
                 for voiceIndex in 1...numOfVoices {
-                    var theVoiceDesc = MyVoiceDescription()
+                    var theVoiceDesc = VoiceDescription()
                     theErr = GetIndVoice(voiceIndex, &theVoiceSpec)
                     if theErr != OSErr(noErr) {
                         self.runAlertPanelWithTitle("GetIndVoice",
