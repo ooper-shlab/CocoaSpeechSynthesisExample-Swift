@@ -294,7 +294,7 @@ class SpeakingTextWindow: NSDocument {
     ----------------------------------------------------------------------------------------*/
     private func displayErrorAlertWithParams(params: [String: AnyObject]) {
         let errorPosition = params[kErrorCallbackParamPosition]!.integerValue + fOffsetToSpokenText
-        let errorCode = params[kErrorCallbackParamError]!.unsignedIntegerValue
+        let errorCode = params[kErrorCallbackParamError]!.integerValue
         
         if errorCode != fLastErrorCode {
             var theErr: OSErr = OSErr(noErr)
