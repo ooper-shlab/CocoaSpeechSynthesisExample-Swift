@@ -122,7 +122,7 @@ class SpeakingCharacterView: NSView {
                 _idleStartTimer?.invalidate()
                 _idleStartTimer = NSTimer(timeInterval: 0.5,
                     target: self,
-                    selector: "",
+                    selector: #selector(SpeakingCharacterView.startIdleExpression),
                     userInfo: nil,
                     repeats: false
                 )
@@ -155,13 +155,13 @@ class SpeakingCharacterView: NSView {
         self.display()
         // If there is more than one frame, then schedule drawing of the next and increment our frame index.
         if _curFrameArray.count > 1/*### 0*/ {
-            _curFrameIndex++
+            _curFrameIndex += 1
             _curFrameIndex %= _curFrameArray.count
             _expressionFrameTimer =
                 NSTimer(timeInterval: frameDictionary[CharacterExpressionFrame.DurationKey.rawValue] as! NSTimeInterval,
                     target: self,
                     selector:
-                    "animateNextExpressionFrame",
+                    #selector(SpeakingCharacterView.animateNextExpressionFrame),
                     userInfo: nil,
                     repeats: false)
         }
@@ -173,7 +173,7 @@ class SpeakingCharacterView: NSView {
     Starts the idle expression.  Called by the idle timer after certain expressions (mainly
     phoneme expressions) expire.
     ----------------------------------------------------------------------------------------*/
-    private func startIdleExpression() {
+    @objc private func startIdleExpression() {
         _idleStartTimer = nil
         
         self.setExpression(.Idle)
