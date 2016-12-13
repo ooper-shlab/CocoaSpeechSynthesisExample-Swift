@@ -7,7 +7,7 @@
 //
 
 import Foundation
-extension FourCharCode: StringLiteralConvertible {
+extension FourCharCode: ExpressibleByStringLiteral {
     public init(stringLiteral: StringLiteralType) {
         if stringLiteral.utf16.count != 4 {
             fatalError("FourCharCode length must be 4!")
@@ -36,12 +36,12 @@ extension FourCharCode: StringLiteralConvertible {
     
     public var fourCharString: String {
         let bytes: [CChar] = [
-            CChar((self >> 24) & 0xFF),
-            CChar((self >> 16) & 0xFF),
-            CChar((self >> 8) & 0xFF),
-            CChar(self & 0xFF),
+            CChar(truncatingBitPattern: (self >> 24) & 0xFF),
+            CChar(truncatingBitPattern: (self >> 16) & 0xFF),
+            CChar(truncatingBitPattern: (self >> 8) & 0xFF),
+            CChar(truncatingBitPattern: self & 0xFF),
             0
         ]
-        return String.fromCString(bytes)!
+        return String(cString: bytes)
     }
 }

@@ -15,4 +15,4 @@ Main source file for this sample.
 
 import Cocoa
 
-NSApplicationMain(Process.argc, Process.unsafeArgv)
+_ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)

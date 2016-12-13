@@ -34,8 +34,8 @@ enum CharacterExpressionFrame: String {
 @objc(SpeakingCharacterView)
 class SpeakingCharacterView: NSView {
     private var _currentExpression: CharacterExpressionIdentifier!
-    private var _idleStartTimer: NSTimer?
-    private var _expressionFrameTimer: NSTimer?
+    private var _idleStartTimer: Timer?
+    private var _expressionFrameTimer: Timer?
     private var _curFrameIndex: Int = 0
     private var _curFrameArray: [[String : AnyObject]] = []
     private var _curFrameImage: NSImage!
@@ -66,7 +66,7 @@ class SpeakingCharacterView: NSView {
     
     Our main draw routine.
     ----------------------------------------------------------------------------------------*/
-    override func drawRect(rect: NSRect) {
+    override func draw(_ rect: NSRect) {
         var thePointToDraw = NSPoint()
         let sourceSize = _curFrameImage.size
         let destSize = rect.size
@@ -82,7 +82,7 @@ class SpeakingCharacterView: NSView {
             thePointToDraw.y = 0
         }
         
-        _curFrameImage!.drawAtPoint(thePointToDraw, fromRect: NSZeroRect, operation: .CompositeSourceOver, fraction: 1.0)
+        _curFrameImage!.draw(at: thePointToDraw, from: NSZeroRect, operation: .sourceOver, fraction: 1.0)
     }
     
     /*----------------------------------------------------------------------------------------
@@ -90,8 +90,8 @@ class SpeakingCharacterView: NSView {
     
     Sets the current expression to the expression corresponding to the given phoneme ID.
     ----------------------------------------------------------------------------------------*/
-    func setExpressionForPhoneme(phoneme: NSNumber) {
-        let phonemeValue = phoneme.shortValue
+    func setExpressionForPhoneme(_ phoneme: NSNumber) {
+        let phonemeValue = phoneme.int16Value
         
         if phonemeValue == 0 || phonemeValue == 1 {
             self.setExpression(.Idle)
@@ -108,7 +108,7 @@ class SpeakingCharacterView: NSView {
     Sets the current expression to the named expresison identifier, then forces the
     character image on screen to be updated.
     ----------------------------------------------------------------------------------------*/
-    func setExpression(expression: CharacterExpressionIdentifier) {
+    func setExpression(_ expression: CharacterExpressionIdentifier) {
         // Set up to begin animating the frames
         _expressionFrameTimer?.invalidate()
         _expressionFrameTimer = nil
@@ -120,7 +120,7 @@ class SpeakingCharacterView: NSView {
         if !(expression == .Idle ||
             expression == .Sleep) {
                 _idleStartTimer?.invalidate()
-                _idleStartTimer = NSTimer(timeInterval: 0.5,
+                _idleStartTimer = Timer(timeInterval: 0.5,
                     target: self,
                     selector: #selector(SpeakingCharacterView.startIdleExpression),
                     userInfo: nil,
@@ -148,7 +148,7 @@ class SpeakingCharacterView: NSView {
         let frameImageName = frameDictionary[CharacterExpressionFrame.ImageFileNameKey.rawValue] as! String
         _curFrameImage = _imageCache[frameImageName]
         if _curFrameImage == nil {
-            _curFrameImage = NSImage(contentsOfFile: NSBundle.mainBundle().pathForResource(frameImageName, ofType: "")!)
+            _curFrameImage = NSImage(contentsOfFile: Bundle.main.path(forResource: frameImageName, ofType: "")!)
             _imageCache[frameImageName] = _curFrameImage
         }
         
@@ -158,7 +158,7 @@ class SpeakingCharacterView: NSView {
             _curFrameIndex += 1
             _curFrameIndex %= _curFrameArray.count
             _expressionFrameTimer =
-                NSTimer(timeInterval: frameDictionary[CharacterExpressionFrame.DurationKey.rawValue] as! NSTimeInterval,
+                Timer(timeInterval: frameDictionary[CharacterExpressionFrame.DurationKey.rawValue] as! TimeInterval,
                     target: self,
                     selector:
                     #selector(SpeakingCharacterView.animateNextExpressionFrame),
@@ -184,8 +184,8 @@ class SpeakingCharacterView: NSView {
     
     Loads description dictionary for the named character and flushes any cached images.
     ----------------------------------------------------------------------------------------*/
-    private func loadChacaterByName(name: String) {
-        _characterDescription = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource(name, ofType: "plist")!)
+    private func loadChacaterByName(_ name: String) {
+        _characterDescription = NSDictionary(contentsOfFile: Bundle.main.path(forResource: name, ofType: "plist")!)
     }
     
 }
