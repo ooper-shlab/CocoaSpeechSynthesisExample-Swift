@@ -37,9 +37,9 @@ class SpeakingCharacterView: NSView {
     private var _idleStartTimer: Timer?
     private var _expressionFrameTimer: Timer?
     private var _curFrameIndex: Int = 0
-    private var _curFrameArray: [[String : AnyObject]] = []
+    private var _curFrameArray: [[String : Any]] = []
     private var _curFrameImage: NSImage!
-    private var _characterDescription: NSDictionary!
+    private var _characterDescription: [String: Any] = [:]
     private var _imageCache: [String: NSImage] = [:]
     
     
@@ -82,7 +82,7 @@ class SpeakingCharacterView: NSView {
             thePointToDraw.y = 0
         }
         
-        _curFrameImage!.draw(at: thePointToDraw, from: NSZeroRect, operation: .sourceOver, fraction: 1.0)
+        _curFrameImage!.draw(at: thePointToDraw, from: .zero, operation: .sourceOver, fraction: 1.0)
     }
     
     /*----------------------------------------------------------------------------------------
@@ -90,8 +90,7 @@ class SpeakingCharacterView: NSView {
     
     Sets the current expression to the expression corresponding to the given phoneme ID.
     ----------------------------------------------------------------------------------------*/
-    func setExpressionForPhoneme(_ phoneme: NSNumber) {
-        let phonemeValue = phoneme.int16Value
+    func setExpressionForPhoneme(_ phonemeValue: Int16) {
         
         if phonemeValue == 0 || phonemeValue == 1 {
             self.setExpression(.Idle)
@@ -113,7 +112,7 @@ class SpeakingCharacterView: NSView {
         _expressionFrameTimer?.invalidate()
         _expressionFrameTimer = nil
         _currentExpression = expression
-        _curFrameArray = _characterDescription[_currentExpression.rawValue]! as! [[String : AnyObject]]
+        _curFrameArray = _characterDescription[_currentExpression.rawValue]! as! [[String : Any]]
         _curFrameIndex = 0
         self.animateNextExpressionFrame()
         // If the expression we just set is NOT the idle or sleep expression, then set up the idle start timer.
@@ -138,7 +137,7 @@ class SpeakingCharacterView: NSView {
     Determines the next frame to animate, loads the image and forces it to be drawn.  If
     the expression contains multiple frames, sets up timer for the next frame to be drawn.
     ----------------------------------------------------------------------------------------*/
-    func animateNextExpressionFrame() {
+    @objc func animateNextExpressionFrame() {
         _expressionFrameTimer = nil
         
         guard _curFrameArray.count > 0 else {return} //###
@@ -185,7 +184,7 @@ class SpeakingCharacterView: NSView {
     Loads description dictionary for the named character and flushes any cached images.
     ----------------------------------------------------------------------------------------*/
     private func loadChacaterByName(_ name: String) {
-        _characterDescription = NSDictionary(contentsOfFile: Bundle.main.path(forResource: name, ofType: "plist")!)
+        _characterDescription = NSDictionary(contentsOfFile: Bundle.main.path(forResource: name, ofType: "plist")!) as! [String: Any]
     }
     
 }

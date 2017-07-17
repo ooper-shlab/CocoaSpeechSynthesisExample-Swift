@@ -24,7 +24,7 @@
 		D73352441B567242007DDC23 /* SpeakingCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73352431B567242007DDC23 /* SpeakingCharacterView.swift */; };
 		D745C84A1B5BD6FC00AD9319 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D745C8491B5BD6FC00AD9319 /* main.swift */; };
 		D745C84C1B5BE11C00AD9319 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D745C84B1B5BE11C00AD9319 /* LICENSE.txt */; };
-		D745C84E1B5BE13100AD9319 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = D745C84D1B5BE13100AD9319 /* readme.txt */; };
+		D745C84E1B5BE13100AD9319 /* README2.md in Resources */ = {isa = PBXBuildFile; fileRef = D745C84D1B5BE13100AD9319 /* README2.md */; };
 		D789048F1B59E63B0014075E /* SpeakingTextWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789048E1B59E63B0014075E /* SpeakingTextWindow.swift */; };
 		D79D813E1B5A761700D509B0 /* FourCharCode+StringLiteralConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79D813D1B5A761700D509B0 /* FourCharCode+StringLiteralConvertible.swift */; };
 /* End PBXBuildFile section */
@@ -52,7 +52,7 @@
 		D73352431B567242007DDC23 /* SpeakingCharacterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakingCharacterView.swift; sourceTree = "<group>"; };
 		D745C8491B5BD6FC00AD9319 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D745C84B1B5BE11C00AD9319 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
-		D745C84D1B5BE13100AD9319 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		D745C84D1B5BE13100AD9319 /* README2.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README2.md; sourceTree = "<group>"; };
 		D789048E1B59E63B0014075E /* SpeakingTextWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakingTextWindow.swift; sourceTree = "<group>"; };
 		D79D813D1B5A761700D509B0 /* FourCharCode+StringLiteralConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FourCharCode+StringLiteralConvertible.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -99,7 +99,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* TempMultiDocApp */ = {
 			isa = PBXGroup;
 			children = (
-				D745C84D1B5BE13100AD9319 /* readme.txt */,
+				D745C84D1B5BE13100AD9319 /* README2.md */,
 				D745C84B1B5BE11C00AD9319 /* LICENSE.txt */,
 				534806F71B2F568500620ECD /* ReadMe.md */,
 				534806F91B2F56BD00620ECD /* CocoaSpeechSynthesisExample.entitlements */,
@@ -205,10 +205,10 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				TargetAttributes = {
 					5389893C0BA87C1D0040EBBD = {
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -243,7 +243,7 @@
 				534806F61B2F567700620ECD /* SpeakingTextWindow.xib in Resources */,
 				534806E71B2F565A00620ECD /* BusterClosed.png in Resources */,
 				534806F51B2F567700620ECD /* MainMenu.xib in Resources */,
-				D745C84E1B5BE13100AD9319 /* readme.txt in Resources */,
+				D745C84E1B5BE13100AD9319 /* README2.md in Resources */,
 				534806EB1B2F565A00620ECD /* BusterIdle4.png in Resources */,
 				D745C84C1B5BE11C00AD9319 /* LICENSE.txt in Resources */,
 				534806E81B2F565A00620ECD /* BusterIdle1.png in Resources */,
@@ -311,7 +311,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = CocoaSpeechSynthesisExample;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -325,7 +326,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = CocoaSpeechSynthesisExample;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -335,12 +337,18 @@
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -376,12 +384,18 @@
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

@@ -108,9 +108,7 @@ class SpeakingTextWindow: NSDocument {
     override init() {
         super.init()
         // set our default window text
-        kDefaultWindowTextString.withCString {p -> Void in
-            self.textData = Data(bytes: p, count: Int(strlen(p)))
-        }
+        self.textData = kDefaultWindowTextString.data(using: .utf8)!
         self.textDataType = kPlainTextDataTypeString
         
     }
@@ -135,10 +133,10 @@ class SpeakingTextWindow: NSDocument {
             // If the window is showing, update the text view.
             if fSpokenTextView != nil {
                 if self.textDataType == "RTF Document" {
-                    fSpokenTextView.replaceCharacters(in: NSRange(0..<fSpokenTextView.string!.utf16.count), withRTF: self.textData)
+                    fSpokenTextView.replaceCharacters(in: NSRange(0..<fSpokenTextView.string.utf16.count), withRTF: self.textData)
                 } else {
-                    fSpokenTextView.replaceCharacters(in: NSRange(0..<fSpokenTextView.string!.utf16.count),
-                                                      with: NSString(data: self.textData, encoding: String.Encoding.utf8.rawValue)! as String)
+                    fSpokenTextView.replaceCharacters(in: NSRange(0..<fSpokenTextView.string.utf16.count),
+                                                      with: String(data: self.textData, encoding: .utf8)!)
                 }
             }
         }
@@ -176,7 +174,7 @@ class SpeakingTextWindow: NSDocument {
      
      Returns reference to character view for callbacks.
      ----------------------------------------------------------------------------------------*/
-    var characterView: SpeakingCharacterView! {
+    fileprivate var characterView: SpeakingCharacterView! {
         return fCharacterView
     }
     
@@ -261,7 +259,7 @@ class SpeakingTextWindow: NSDocument {
         self.enableOptionsForSpeakingState(fCurrentlySpeaking)
         
         // update parameter fields
-        var valueAsNSNumber: AnyObject? = nil
+        var valueAsNSNumber: CFTypeRef? = nil
         if CopySpeechProperty(fCurSpeechChannel!, kSpeechRateProperty, &valueAsNSNumber) == OSErr(noErr) {
             fRateCurrentStaticField.doubleValue = valueAsNSNumber!.doubleValue!
         }
@@ -296,12 +294,12 @@ class SpeakingTextWindow: NSDocument {
      
      Displays an alert describing a text processing error provided in the error callback.
      ----------------------------------------------------------------------------------------*/
-    private func displayErrorAlertWithParams(_ params: [String: AnyObject]) {
-        let errorPosition = (params[kErrorCallbackParamPosition] as! NSNumber).intValue + fOffsetToSpokenText
-        let errorCode = (params[kErrorCallbackParamError] as! NSNumber).intValue
+    private func displayErrorAlertWithParams(_ params: [String: Any]) {
+        let errorPosition = (params[kErrorCallbackParamPosition] as! Int) + fOffsetToSpokenText
+        let errorCode = params[kErrorCallbackParamError] as! Int
         
         if errorCode != fLastErrorCode {
-            var theErr: OSErr = OSErr(noErr)
+            var theErr = OSErr(noErr)
             
             // Tell engine to pause while we display this dialog.
             theErr = PauseSpeechAt(fCurSpeechChannel!, Int32(kImmediate))
@@ -323,7 +321,7 @@ class SpeakingTextWindow: NSDocument {
             let response = self.runAlertPanelWithTitle("Text Processing Error",
                                                        message: theMessageStr,
                                                        buttonTitles: ["Stop", "Continue"])
-            if response == NSAlertFirstButtonReturn {
+            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
                 self.startStopButtonPressed(fStartStopButton)
             } else {
                 theErr = ContinueSpeech(fCurSpeechChannel!)
@@ -343,8 +341,8 @@ class SpeakingTextWindow: NSDocument {
      
      Displays an alert with information about a sync command in response to a sync callback.
      ----------------------------------------------------------------------------------------*/
-    func displaySyncAlertWithMessage(_ messageNumber: NSNumber) {
-        var theErr: OSErr = OSErr(noErr)
+    fileprivate func displaySyncAlertWithMessage(_ theMessageValue: OSType) {
+        var theErr = OSErr(noErr)
         var theMessageStr = ""
         
         // Tell engine to pause while we display this dialog.
@@ -356,7 +354,7 @@ class SpeakingTextWindow: NSDocument {
         }
         
         // Display error alert and stop or continue based on user's desires
-        let theMessageValue = messageNumber.uint32Value
+        //let theMessageValue = messageNumber.uint32Value
         let messageFormat = NSLocalizedString("Sync embedded command was discovered containing message %ld ('%@').",
                                               comment: "Sync embedded command was discovered containing message %ld ('%@').")
         theMessageStr = String(format: messageFormat,
@@ -364,7 +362,7 @@ class SpeakingTextWindow: NSDocument {
         
         let alertButtonClicked =
             self.runAlertPanelWithTitle("Sync Callback", message: theMessageStr, buttonTitles: ["Stop", "Continue"])
-        if alertButtonClicked == 1 {
+        if alertButtonClicked.rawValue == 1 {
             self.startStopButtonPressed(fStartStopButton)
         } else {
             theErr = ContinueSpeech(fCurSpeechChannel!)
@@ -382,7 +380,7 @@ class SpeakingTextWindow: NSDocument {
      Updates user interface and optionally displays an alert when generation of speech is
      finish.
      ----------------------------------------------------------------------------------------*/
-    func speechIsDone() {
+    fileprivate func speechIsDone() {
         fCurrentlySpeaking = false
         self.updateSpeakingControlState()
         self.enableCallbackControlsBasedOnSavingToFileFlag(false)
@@ -398,8 +396,8 @@ class SpeakingTextWindow: NSDocument {
      
      Displays an alert in response to a text done callback.
      ----------------------------------------------------------------------------------------*/
-    func displayTextDoneAlert() {
-        var theErr: OSErr = OSErr(noErr)
+    fileprivate func displayTextDoneAlert() {
+        var theErr = OSErr(noErr)
         
         // Tell engine to pause while we display this dialog.
         theErr = PauseSpeechAt(fCurSpeechChannel!, Int32(kImmediate))
@@ -413,7 +411,7 @@ class SpeakingTextWindow: NSDocument {
         let response = self.runAlertPanelWithTitle("Text Done Callback",
                                                    message: "Processing of the text has completed.",
                                                    buttonTitles: ["Stop", "Continue"])
-        if response == NSAlertFirstButtonReturn {
+        if response == NSApplication.ModalResponse.alertFirstButtonReturn {
             self.startStopButtonPressed(fStartStopButton)
         } else {
             theErr = ContinueSpeech(fCurSpeechChannel!)
@@ -429,10 +427,10 @@ class SpeakingTextWindow: NSDocument {
      startStopButtonPressed:
      
      An action method called when the user clicks the "Start Speaking"/"Stop Speaking"
-     button.	 We either start or stop speaking based on the current speaking state.
+     button.     We either start or stop speaking based on the current speaking state.
      ----------------------------------------------------------------------------------------*/
     @IBAction func startStopButtonPressed(_ sender: NSButton) {
-        var theErr: OSErr = OSErr(noErr)
+        var theErr = OSErr(noErr)
         
         if fCurrentlySpeaking {
             var whereToStop: Int32 = 0
@@ -446,7 +444,7 @@ class SpeakingTextWindow: NSDocument {
                 whereToStop = kImmediate
             }
             if whereToStop == kImmediate {
-                // NOTE:	We could just call StopSpeechAt with kImmediate, but for test purposes
+                // NOTE:    We could just call StopSpeechAt with kImmediate, but for test purposes
                 // we exercise the StopSpeech routine.
                 theErr = StopSpeech(fCurSpeechChannel!)
                 if theErr != OSErr(noErr) {
@@ -473,16 +471,16 @@ class SpeakingTextWindow: NSDocument {
     /*----------------------------------------------------------------------------------------
      saveAsButtonPressed:
      
-     An action method called when the user clicks the "Save As File" button.	 We ask user
+     An action method called when the user clicks the "Save As File" button.     We ask user
      to specify where to save the file, then start speaking to this file.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func saveAsButtonPressed(_ sender: AnyObject) {
+    @IBAction func saveAsButtonPressed(_ sender: Any) {
         
         let theSavePanel = NSSavePanel()
         
         theSavePanel.prompt = NSLocalizedString("Save", comment: "Save")
         theSavePanel.nameFieldStringValue = "Synthesized Speech.aiff"
-        if theSavePanel.runModal() == NSFileHandlingPanelOKButton {
+        if theSavePanel.runModal() == .OK {
             let selectedFileURL = theSavePanel.url
             self.startSpeakingTextViewToURL(selectedFileURL)
         }
@@ -495,7 +493,7 @@ class SpeakingTextWindow: NSDocument {
      process, optionally speaking to a file instead playing through the speakers.
      ----------------------------------------------------------------------------------------*/
     private func startSpeakingTextViewToURL(_ url: URL?) {
-        var theErr: OSErr = OSErr(noErr)
+        var theErr = OSErr(noErr)
         var theViewText: String? = nil
         
         // Grab the selection substring, or if no selection then grab entire text.
@@ -504,7 +502,7 @@ class SpeakingTextWindow: NSDocument {
             theViewText = fSpokenTextView.string
             fOffsetToSpokenText = 0
         } else {
-            theViewText = (fSpokenTextView.string as NSString? ?? "").substring(with: fOrgSelectionRange)
+            theViewText = (fSpokenTextView.string as NSString).substring(with: fOrgSelectionRange)
             fOffsetToSpokenText = fOrgSelectionRange.location
         }
         
@@ -512,7 +510,7 @@ class SpeakingTextWindow: NSDocument {
         fSavingToFile = (url != nil)
         if theErr == OSErr(noErr) {
             typealias ErrorCFCallBackType = @convention(c) (SpeechChannel, SRefCon, CFError?)->Void
-            let callback: ErrorCFCallBackType? = fSavingToFile ? nil: OurErrorCFCallBackProc
+            let callback = fSavingToFile ? nil: OurErrorCFCallBackProc as ErrorCFCallBackType?
             let callbackAddr = unsafeBitCast(callback, to: UInt.self) as CFNumber
             theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechErrorCFCallBack,
                                        callbackAddr)
@@ -524,7 +522,7 @@ class SpeakingTextWindow: NSDocument {
         }
         if theErr == OSErr(noErr) {
             typealias PhonemeCallBackType = @convention(c) (SpeechChannel, SRefCon, Int16)->Void
-            let callback: PhonemeCallBackType? = fSavingToFile ? nil: OurPhonemeCallBackProc
+            let callback = fSavingToFile ? nil: OurPhonemeCallBackProc as PhonemeCallBackType?
             let callbackAddr = unsafeBitCast(callback, to: UInt.self) as CFNumber
             theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechPhonemeCallBack,
                                        callbackAddr)
@@ -536,7 +534,7 @@ class SpeakingTextWindow: NSDocument {
         }
         if theErr == OSErr(noErr) {
             typealias DoneCallBackType = @convention(c) (SpeechChannel, SRefCon)->Void
-            let callback: DoneCallBackType? = fSavingToFile ? nil: OurSpeechDoneCallBackProc
+            let callback = fSavingToFile ? nil: OurSpeechDoneCallBackProc as DoneCallBackType?
             let callbackAddr = unsafeBitCast(callback, to: UInt.self) as CFNumber
             theErr = SetSpeechProperty(fCurSpeechChannel!,
                                        kSpeechSpeechDoneCallBack,
@@ -549,7 +547,7 @@ class SpeakingTextWindow: NSDocument {
         }
         if theErr == OSErr(noErr) {
             typealias SyncCallBackType = @convention(c) (SpeechChannel, SRefCon, OSType)->Void
-            let callback: SyncCallBackType? = fSavingToFile ? nil: OurSyncCallBackProc
+            let callback = fSavingToFile ? nil: OurSyncCallBackProc as SyncCallBackType?
             let callbackAddr = unsafeBitCast(callback, to: UInt.self) as CFNumber
             theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechSyncCallBack,
                                        callbackAddr)
@@ -561,7 +559,7 @@ class SpeakingTextWindow: NSDocument {
         }
         if theErr == OSErr(noErr) {
             typealias TextDoneCallBackType = @convention(c) (SpeechChannel, SRefCon, UnsafeMutablePointer<UnsafeRawPointer?>, UnsafePointer<UInt>, UnsafePointer<Int>)->Void
-            let callback: TextDoneCallBackType? = fSavingToFile ? nil: OurTextDoneCallBackProc
+            let callback = fSavingToFile ? nil: OurTextDoneCallBackProc as TextDoneCallBackType?
             let callbackAddr = unsafeBitCast(callback, to: UInt.self) as CFNumber
             theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechTextDoneCallBack,
                                        callbackAddr)
@@ -573,7 +571,7 @@ class SpeakingTextWindow: NSDocument {
         }
         if theErr == OSErr(noErr) {
             typealias WordCFCallBackType = @convention(c) (SpeechChannel, SRefCon, CFString, CFRange)->Void
-            let callback: WordCFCallBackType? = fSavingToFile ? nil: OurWordCFCallBackProc
+            let callback = fSavingToFile ? nil: OurWordCFCallBackProc as WordCFCallBackType?
             let callbackAddr = unsafeBitCast(callback, to: UInt.self) as CFNumber
             theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechWordCFCallBack,
                                        callbackAddr)
@@ -585,7 +583,7 @@ class SpeakingTextWindow: NSDocument {
         }
         
         // Set URL to save file to disk
-        SetSpeechProperty(fCurSpeechChannel!, kSpeechOutputToFileURLProperty, url as NSURL?)
+        SetSpeechProperty(fCurSpeechChannel!, kSpeechOutputToFileURLProperty, url as CFURL?)
         
         // Convert NSString to cString.
         // We want the text view the active view.  Also saves any parameters currently being edited.
@@ -613,10 +611,10 @@ class SpeakingTextWindow: NSDocument {
      pauseContinueButtonPressed:
      
      An action method called when the user clicks the "Pause Speaking"/"Continue Speaking"
-     button.	 We either pause or continue speaking based on the current speaking state.
+     button.     We either pause or continue speaking based on the current speaking state.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func pauseContinueButtonPressed(_ sender: AnyObject) {
-        var theErr: OSErr = OSErr(noErr)
+    @IBAction func pauseContinueButtonPressed(_ sender: Any) {
+        var theErr = OSErr(noErr)
         
         if fCurrentlyPaused {
             // We want the text view the active view.  Also saves any parameters currently being edited.
@@ -659,12 +657,12 @@ class SpeakingTextWindow: NSDocument {
      voicePopupSelected:
      
      An action method called when the user selects a new voice from the Voices pop-up
-     menu.  We ask the speech channel to use the selected voice.	 If the current
+     menu.  We ask the speech channel to use the selected voice.     If the current
      speech channel cannot use the selected voice, we close and open new speech
      channel with the selecte voice.
      ----------------------------------------------------------------------------------------*/
     @IBAction func voicePopupSelected(_ sender: NSPopUpButton) {
-        var theErr: OSErr = OSErr(noErr)
+        var theErr = OSErr(noErr)
         let theSelectedMenuIndex = sender.indexOfSelectedItem
         
         if theSelectedMenuIndex == 0 {
@@ -692,8 +690,8 @@ class SpeakingTextWindow: NSDocument {
                 fSelectedVoiceID = theVoiceSpec.id
                 
                 // Change the current voice.  If it needs another engine, then dispose the current channel and open another
-                let voiceDict: NSDictionary = [kSpeechVoiceID as NSString: Int(fSelectedVoiceID),
-                                               kSpeechVoiceCreator as NSString: Int(fSelectedVoiceCreator)]
+                let voiceDict: NSDictionary = [kSpeechVoiceID: fSelectedVoiceID,
+                                               kSpeechVoiceCreator: fSelectedVoiceCreator]
                 
                 theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechCurrentVoiceProperty, voiceDict)
                 if theErr == OSErr(incompatibleVoice) {
@@ -720,10 +718,10 @@ class SpeakingTextWindow: NSDocument {
      charByCharCheckboxSelected:
      
      An action method called when the user checks/unchecks the Character-By-Character
-     mode checkbox.	We tell the speech channel to use this setting.
+     mode checkbox.    We tell the speech channel to use this setting.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func charByCharCheckboxSelected(_ sender: AnyObject) {
-        var theErr: OSErr = OSErr(noErr)
+    @IBAction func charByCharCheckboxSelected(_ sender: Any) {
+        var theErr = OSErr(noErr)
         
         if fCharByCharCheckboxButton.intValue != 0 {
             theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechCharacterModeProperty, kSpeechModeLiteral)
@@ -741,10 +739,10 @@ class SpeakingTextWindow: NSDocument {
      digitByDigitCheckboxSelected:
      
      An action method called when the user checks/unchecks the Digit-By-Digit
-     mode checkbox.	We tell the speech channel to use this setting.
+     mode checkbox.    We tell the speech channel to use this setting.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func digitByDigitCheckboxSelected(_ sender: AnyObject) {
-        var theErr: OSErr = OSErr(noErr)
+    @IBAction func digitByDigitCheckboxSelected(_ sender: Any) {
+        var theErr = OSErr(noErr)
         
         if fDigitByDigitCheckboxButton.intValue != 0 {
             theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechNumberModeProperty, kSpeechModeLiteral)
@@ -762,10 +760,10 @@ class SpeakingTextWindow: NSDocument {
      phonemeModeCheckboxSelected:
      
      An action method called when the user checks/unchecks the Phoneme input
-     mode checkbox.	We tell the speech channel to use this setting.
+     mode checkbox.    We tell the speech channel to use this setting.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func phonemeModeCheckboxSelected(_ sender:AnyObject) {
-        var theErr: OSErr = OSErr(noErr)
+    @IBAction func phonemeModeCheckboxSelected(_ sender: Any) {
+        var theErr = OSErr(noErr)
         
         if fPhonemeModeCheckboxButton.intValue != 0 {
             theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechInputModeProperty, kSpeechModePhoneme)
@@ -782,17 +780,17 @@ class SpeakingTextWindow: NSDocument {
     /*----------------------------------------------------------------------------------------
      dumpPhonemesSelected:
      
-     An action method called when the user clicks the Dump Phonemes button.	We ask
+     An action method called when the user clicks the Dump Phonemes button.    We ask
      the speech channel for a phoneme representation of the window text then save the
      result to a text file at a location determined by the user.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func dumpPhonemesSelected(_ sender: AnyObject) {
+    @IBAction func dumpPhonemesSelected(_ sender: Any) {
         let panel = NSSavePanel()
         
-        if panel.runModal() != 0 && panel.url != nil {
+        if panel.runModal() != .cancel && panel.url != nil {
             // Get and speech text
             var phonemesCFStringRef: CFString? = nil
-            let theErr = CopyPhonemesFromText(fCurSpeechChannel!, fSpokenTextView.string! as CFString, &phonemesCFStringRef)
+            let theErr = CopyPhonemesFromText(fCurSpeechChannel!, fSpokenTextView.string as CFString, &phonemesCFStringRef)
             if theErr == OSErr(noErr) {
                 let phonemesString = phonemesCFStringRef! as NSString
                 do {
@@ -817,7 +815,7 @@ class SpeakingTextWindow: NSDocument {
      
      An action method called when the user clicks the "Use Dictionary…" button.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func useDictionarySelected(_ sender: AnyObject) {
+    @IBAction func useDictionarySelected(_ sender: Any) {
         // Open file.
         let panel = NSOpenPanel()
         
@@ -826,7 +824,7 @@ class SpeakingTextWindow: NSDocument {
         
         panel.allowsMultipleSelection = true
         
-        if panel.runModal() != 0 {
+        if panel.runModal() != .cancel {
             for fileURL in panel.urls {
                 // Read dictionary file into NSData object.
                 if let speechDictionary = NSDictionary(contentsOf: fileURL) {
@@ -853,7 +851,7 @@ class SpeakingTextWindow: NSDocument {
      An action method called when the user changes the rate field.  We tell the speech
      channel to use this setting.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func rateChanged(_ sender: AnyObject) {
+    @IBAction func rateChanged(_ sender: Any) {
         let theErr = SetSpeechProperty(fCurSpeechChannel!,
                                        kSpeechRateProperty,
                                        fRateDefaultEditableField.doubleValue as NSNumber?)
@@ -869,10 +867,10 @@ class SpeakingTextWindow: NSDocument {
     /*----------------------------------------------------------------------------------------
      pitchBaseChanged:
      
-     An action method called when the user changes the pitch base field.	 We tell the speech
+     An action method called when the user changes the pitch base field.     We tell the speech
      channel to use this setting.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func pitchBaseChanged(_ sender: AnyObject) {
+    @IBAction func pitchBaseChanged(_ sender: Any) {
         let theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechPitchBaseProperty,
                                        fPitchBaseDefaultEditableField.doubleValue as NSNumber?)
         if theErr != OSErr(noErr) {
@@ -890,7 +888,7 @@ class SpeakingTextWindow: NSDocument {
      An action method called when the user changes the pitch modulation field.  We tell
      the speech channel to use this setting.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func pitchModChanged(_ sender: AnyObject) {
+    @IBAction func pitchModChanged(_ sender: Any) {
         let theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechPitchModProperty,
                                        fPitchModDefaultEditableField.doubleValue as NSNumber?)
         if theErr != OSErr(noErr) {
@@ -905,10 +903,10 @@ class SpeakingTextWindow: NSDocument {
     /*----------------------------------------------------------------------------------------
      volumeChanged:
      
-     An action method called when the user changes the volume field.	 We tell
+     An action method called when the user changes the volume field.     We tell
      the speech channel to use this setting.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func volumeChanged(_ sender: AnyObject) {
+    @IBAction func volumeChanged(_ sender: Any) {
         let theErr = SetSpeechProperty(fCurSpeechChannel!,
                                        kSpeechVolumeProperty,
                                        fVolumeDefaultEditableField.doubleValue as NSNumber?)
@@ -927,7 +925,7 @@ class SpeakingTextWindow: NSDocument {
      An action method called when the user clicks the Use Defaults button.  We tell
      the speech channel to use this the default settings.
      ----------------------------------------------------------------------------------------*/
-    @IBAction func resetSelected(_ sender: AnyObject) {
+    @IBAction func resetSelected(_ sender: Any) {
         let theErr = SetSpeechProperty(fCurSpeechChannel!, kSpeechResetProperty, nil)
         
         self.fillInEditableParameterFields()
@@ -939,13 +937,13 @@ class SpeakingTextWindow: NSDocument {
         }
     }
     
-    @IBAction func wordCallbacksButtonPressed(_ sender: AnyObject) {
+    @IBAction func wordCallbacksButtonPressed(_ sender: Any) {
         if fHandleWordCallbacksCheckboxButton.intValue == 0 {
             fSpokenTextView.setSelectedRange(fOrgSelectionRange)
         }
     }
     
-    @IBAction func phonemeCallbacksButtonPressed(_ sender: AnyObject) {
+    @IBAction func phonemeCallbacksButtonPressed(_ sender: Any) {
         if fHandlePhonemeCallbacksCheckboxButton.intValue != 0 {
             characterView?.setExpression(.Idle)
         } else {
@@ -993,7 +991,7 @@ class SpeakingTextWindow: NSDocument {
      ----------------------------------------------------------------------------------------*/
     private func fillInEditableParameterFields() {
         var tempDoubleValue = 0.0
-        var tempNSNumber: AnyObject? = nil
+        var tempNSNumber: CFTypeRef? = nil
         
         CopySpeechProperty(fCurSpeechChannel!, kSpeechRateProperty, &tempNSNumber)
         tempDoubleValue = tempNSNumber!.doubleValue!
@@ -1021,12 +1019,12 @@ class SpeakingTextWindow: NSDocument {
      createNewSpeechChannel:
      
      Create a new speech channel for the given voice spec.  A nil voice spec pointer
-     causes the speech channel to use the default voice.	 Any existing speech channel
+     causes the speech channel to use the default voice.     Any existing speech channel
      for this window is closed first.
      ----------------------------------------------------------------------------------------*/
     @discardableResult
     private func createNewSpeechChannel(_ voiceSpec: UnsafeMutablePointer<VoiceSpec>?) -> OSErr {
-        var theErr: OSErr = OSErr(noErr)
+        var theErr = OSErr(noErr)
         
         // Dispose of the current one, if present.
         if fCurSpeechChannel != nil {
@@ -1073,7 +1071,7 @@ class SpeakingTextWindow: NSDocument {
      the new speech channel.
      ----------------------------------------------------------------------------------------*/
     override func awakeFromNib() {
-        var theErr: OSErr = OSErr(noErr)
+        var theErr = OSErr(noErr)
         
         // Build the Voices pop-up menu
         do {
@@ -1159,8 +1157,8 @@ class SpeakingTextWindow: NSDocument {
      Part of the NSDocument support. Called by NSDocument to return the nib file name of
      the document.
      ----------------------------------------------------------------------------------------*/
-    override var windowNibName: String {
-        return "SpeakingTextWindow"
+    override var windowNibName: NSNib.Name? {
+        return NSNib.Name("SpeakingTextWindow")
     }
     
     /*----------------------------------------------------------------------------------------
@@ -1173,10 +1171,10 @@ class SpeakingTextWindow: NSDocument {
         super.windowControllerDidLoadNib(aController)
         // Update the window text from data
         if self.textDataType == "RTF Document" {
-            fSpokenTextView.replaceCharacters(in: NSRange(0..<fSpokenTextView.string!.utf16.count), withRTF: self.textData)
+            fSpokenTextView.replaceCharacters(in: NSRange(0..<fSpokenTextView.string.utf16.count), withRTF: self.textData)
         } else {
-            fSpokenTextView.replaceCharacters(in: NSRange(0..<fSpokenTextView.string!.utf16.count),
-                                              with: NSString(data: self.textData, encoding: String.Encoding.utf8.rawValue)! as String)
+            fSpokenTextView.replaceCharacters(in: NSRange(0..<fSpokenTextView.string.utf16.count),
+                                              with: String(data: self.textData, encoding: .utf8)!)
         }
     }
     
@@ -1191,9 +1189,9 @@ class SpeakingTextWindow: NSDocument {
     override func data(ofType aType: String) throws -> Data {
         // Write text to file.
         if aType == "RTF Document" {
-            self.textData = fSpokenTextView.rtf(from: NSRange(0..<fSpokenTextView.string!.utf16.count))!
+            self.textData = fSpokenTextView.rtf(from: NSRange(0..<fSpokenTextView.string.utf16.count))!
         } else {
-            self.textData = Data(bytes: UnsafePointer<UInt8>(fSpokenTextView.string!), count: fSpokenTextView.string!.utf8.count)
+            self.textData = fSpokenTextView.string.data(using: .utf8)!
         }
         
         return self.textData
@@ -1220,7 +1218,7 @@ class SpeakingTextWindow: NSDocument {
     @discardableResult
     private func runAlertPanelWithTitle(_ inTitle: String,
                                         message inMessage: String,
-                                        buttonTitles inButtonTitles: [String]) -> NSModalResponse
+                                        buttonTitles inButtonTitles: [String]) -> NSApplication.ModalResponse
     {
         let alert = NSAlert()
         alert.messageText = NSLocalizedString(inTitle, comment: inTitle)
@@ -1240,7 +1238,7 @@ class SpeakingTextWindow: NSDocument {
 //
 // All speech synthesis callbacks, except for the Text Done callback, call their specified routine on a
 // thread other than the main thread.  Performing certain actions directly from a speech synthesis callback
-// routine may cause your program to crash without certain safe gaurds.	 In this example, we use the NSThread
+// routine may cause your program to crash without certain safe gaurds.     In this example, we use the NSThread
 // method performSelectorOnMainThread:withObject:waitUntilDone: to safely update the user interface and
 // interact with our objects using only the main thread.
 //
@@ -1257,11 +1255,11 @@ class SpeakingTextWindow: NSDocument {
  
  Called by speech channel when an error occurs during processing of text to speak.
  ----------------------------------------------------------------------------------------*/
-func OurErrorCFCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon: SRefCon, _ inCFErrorRef: CFError?) {
+private func OurErrorCFCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon: SRefCon, _ inCFErrorRef: CFError?) {
     autoreleasepool {
-        let stw = unsafeBitCast(inRefCon, to: SpeakingTextWindow.self)
-        if stw.shouldDisplayErrorCallbacks {
-            DispatchQueue.main.async {
+        let stw = Unmanaged<SpeakingTextWindow>.fromOpaque(inRefCon).takeUnretainedValue()
+        DispatchQueue.main.async {
+            if stw.shouldDisplayErrorCallbacks {
                 NSAlert(error: inCFErrorRef!).runModal()
             }
         }
@@ -1271,7 +1269,7 @@ func OurErrorCFCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon: SRefCo
 /*----------------------------------------------------------------------------------------
  OurTextDoneCallBackProc
  
- Called by speech channel when all text has been processed.	Additional text can be
+ Called by speech channel when all text has been processed.    Additional text can be
  passed back to continue processing.
  ----------------------------------------------------------------------------------------*/
 private func OurTextDoneCallBackProc(_ inSpeechChannel: SpeechChannel,
@@ -1281,10 +1279,10 @@ private func OurTextDoneCallBackProc(_ inSpeechChannel: SpeechChannel,
                                      _ inControlFlags: UnsafePointer<Int>)
 {
     autoreleasepool {
-        let stw = unsafeBitCast(inRefCon, to: SpeakingTextWindow.self)
+        let stw = Unmanaged<SpeakingTextWindow>.fromOpaque(inRefCon).takeUnretainedValue()
         inNextBuf.pointee = nil
-        if stw.shouldDisplayTextDoneCallbacks {
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            if stw.shouldDisplayTextDoneCallbacks {
                 stw.displayTextDoneAlert()
             }
         }
@@ -1298,7 +1296,7 @@ private func OurTextDoneCallBackProc(_ inSpeechChannel: SpeechChannel,
  ----------------------------------------------------------------------------------------*/
 private func OurSpeechDoneCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon: SRefCon) {
     autoreleasepool {
-        let stw = unsafeBitCast(inRefCon, to: SpeakingTextWindow.self)
+        let stw = Unmanaged<SpeakingTextWindow>.fromOpaque(inRefCon).takeUnretainedValue()
         DispatchQueue.main.async {
             stw.speechIsDone()
         }
@@ -1313,10 +1311,10 @@ private func OurSpeechDoneCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRef
  ----------------------------------------------------------------------------------------*/
 private func OurSyncCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon: SRefCon, _ inSyncMessage: OSType) {
     autoreleasepool {
-        let stw = unsafeBitCast(inRefCon, to: SpeakingTextWindow.self)
-        if stw.shouldDisplaySyncCallbacks {
-            DispatchQueue.main.async {
-                stw.displaySyncAlertWithMessage(NSNumber(value: inSyncMessage))
+        let stw = Unmanaged<SpeakingTextWindow>.fromOpaque(inRefCon).takeUnretainedValue()
+        DispatchQueue.main.async {
+            if stw.shouldDisplaySyncCallbacks {
+                stw.displaySyncAlertWithMessage(inSyncMessage)
             }
         }
     }
@@ -1325,15 +1323,15 @@ private func OurSyncCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon: S
 /*----------------------------------------------------------------------------------------
  OurPhonemeCallBackProc
  
- Called by speech channel every time a phoneme is about to be generated.	 You might use
+ Called by speech channel every time a phoneme is about to be generated.     You might use
  this to animate a speaking character.
  ----------------------------------------------------------------------------------------*/
 private func OurPhonemeCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon: SRefCon, _ inPhonemeOpcode: Int16) {
     autoreleasepool {
-        let stw = unsafeBitCast(inRefCon, to: SpeakingTextWindow.self)
-        if stw.shouldDisplayPhonemeCallbacks {
-            DispatchQueue.main.async {
-                stw.characterView.setExpressionForPhoneme(NSNumber(value: inPhonemeOpcode))
+        let stw = Unmanaged<SpeakingTextWindow>.fromOpaque(inRefCon).takeUnretainedValue()
+        DispatchQueue.main.async {
+            if stw.shouldDisplayPhonemeCallbacks {
+                stw.characterView.setExpressionForPhoneme(inPhonemeOpcode)
             }
         }
     }
@@ -1347,9 +1345,9 @@ private func OurPhonemeCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon
  ----------------------------------------------------------------------------------------*/
 private func OurWordCFCallBackProc(_ inSpeechChannel: SpeechChannel, _ inRefCon: SRefCon, _ inCFStringRef: CFString, _ inWordCFRange: CFRange) {
     autoreleasepool {
-        let stw = unsafeBitCast(inRefCon, to: SpeakingTextWindow.self)
-        if stw.shouldDisplayWordCallbacks {
-            DispatchQueue.main.async {
+        let stw = Unmanaged<SpeakingTextWindow>.fromOpaque(inRefCon).takeUnretainedValue()
+        DispatchQueue.main.async {
+            if stw.shouldDisplayWordCallbacks {
                 stw.highlightWordWithRange(inWordCFRange)
             }
         }
