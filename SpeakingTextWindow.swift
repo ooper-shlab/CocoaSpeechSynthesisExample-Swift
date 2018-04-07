@@ -945,9 +945,9 @@ class SpeakingTextWindow: NSDocument {
     
     @IBAction func phonemeCallbacksButtonPressed(_ sender: Any) {
         if fHandlePhonemeCallbacksCheckboxButton.intValue != 0 {
-            characterView?.setExpression(.Idle)
+            characterView?.setExpression(.idle)
         } else {
-            characterView?.setExpression(.Sleep)
+            characterView?.setExpression(.sleep)
         }
     }
     
@@ -977,9 +977,9 @@ class SpeakingTextWindow: NSDocument {
         fHandleErrorCallbacksCheckboxButton.isEnabled = !savingToFile
         fHandleTextDoneCallbacksCheckboxButton.isEnabled = !savingToFile
         if savingToFile || fHandlePhonemeCallbacksCheckboxButton.intValue == 0 {
-            characterView?.setExpression(.Sleep)
+            characterView?.setExpression(.sleep)
         } else {
-            characterView?.setExpression(.Idle)
+            characterView?.setExpression(.idle)
         }
     }
     
@@ -1101,9 +1101,7 @@ class SpeakingTextWindow: NSDocument {
                                                     buttonTitles: ["Oh?"])
                     }
                     if theErr == OSErr(noErr) {
-                        theErr = withUnsafeMutablePointer(to: &theVoiceDesc) {ptrVoiceDesc in
-                            GetVoiceDescription(&theVoiceSpec, UnsafeMutablePointer(ptrVoiceDesc), MemoryLayout.size(ofValue: theVoiceDesc))
-                        }
+                        theErr = GetVoiceDescription(&theVoiceSpec, &theVoiceDesc, MemoryLayout.size(ofValue: theVoiceDesc))
                     }
                     if theErr != OSErr(noErr) {
                         self.runAlertPanelWithTitle("GetVoiceDescription",
@@ -1112,8 +1110,9 @@ class SpeakingTextWindow: NSDocument {
                     }
                     if theErr == OSErr(noErr) {
                         // Get voice name and add it to the menu list
-                        let theNameString = withUnsafePointer(to: &theVoiceDesc.name.1) {charPtr in
-                            String(cString: UnsafePointer(charPtr))
+                        let theNameString = withUnsafeBytes(of: &theVoiceDesc.name) {(charBufPtr)->String in
+                            let charData = Data(bytes: charBufPtr.baseAddress!+1, count: Int(charBufPtr[0]))
+                            return String(data: charData, encoding: .utf8)!
                         }
                         fVoicesPopUpButton.addItem(withTitle: theNameString)
                         // Selected this item if it matches our default voice spec.

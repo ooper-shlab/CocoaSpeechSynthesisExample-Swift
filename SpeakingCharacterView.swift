@@ -18,17 +18,17 @@ import Cocoa
 
 // Expression Identifiers
 enum CharacterExpressionIdentifier: String {
-    case Sleep = "ExpressionIdentifierSleep"
-    case Idle = "ExpressionIdentifierIdle"
+    case sleep = "ExpressionIdentifierSleep"
+    case idle = "ExpressionIdentifierIdle"
     
-    case Consonant = "ExpressionIdentifierConsonant"
-    case Vowel = "ExpressionIdentifierVowel"
+    case consonant = "ExpressionIdentifierConsonant"
+    case vowel = "ExpressionIdentifierVowel"
 }
 
 // Frame dictionary keys
 enum CharacterExpressionFrame: String {
-    case DurationKey = "FrameDuration";   // TimeInterval
-    case ImageFileNameKey = "FrameImageFileName"
+    case durationKey = "FrameDuration";   // TimeInterval
+    case imageFileNameKey = "FrameImageFileName"
 }
 
 @objc(SpeakingCharacterView)
@@ -53,7 +53,7 @@ class SpeakingCharacterView: NSView {
     override init(frame: NSRect) {
         super.init(frame: frame)
         self.loadChacaterByName("Buster")
-        self.setExpression(.Sleep)
+        self.setExpression(.sleep)
         
     }
     
@@ -93,11 +93,11 @@ class SpeakingCharacterView: NSView {
     func setExpressionForPhoneme(_ phonemeValue: Int16) {
         
         if phonemeValue == 0 || phonemeValue == 1 {
-            self.setExpression(.Idle)
+            self.setExpression(.idle)
         } else if phonemeValue >= 2 && phonemeValue <= 17 {
-            self.setExpression(.Vowel)
+            self.setExpression(.vowel)
         } else {
-            self.setExpression(.Consonant)
+            self.setExpression(.consonant)
         }
     }
     
@@ -116,12 +116,12 @@ class SpeakingCharacterView: NSView {
         _curFrameIndex = 0
         self.animateNextExpressionFrame()
         // If the expression we just set is NOT the idle or sleep expression, then set up the idle start timer.
-        if !(expression == .Idle ||
-            expression == .Sleep) {
+        if !(expression == .idle ||
+            expression == .sleep) {
                 _idleStartTimer?.invalidate()
                 _idleStartTimer = Timer(timeInterval: 0.5,
                     target: self,
-                    selector: #selector(SpeakingCharacterView.startIdleExpression),
+                    selector: #selector(self.startIdleExpression),
                     userInfo: nil,
                     repeats: false
                 )
@@ -144,7 +144,7 @@ class SpeakingCharacterView: NSView {
         let frameDictionary = _curFrameArray[_curFrameIndex]
         
         // Grab image and force draw.  Use cache to reduce disk hits
-        let frameImageName = frameDictionary[CharacterExpressionFrame.ImageFileNameKey.rawValue] as! String
+        let frameImageName = frameDictionary[CharacterExpressionFrame.imageFileNameKey.rawValue] as! String
         _curFrameImage = _imageCache[frameImageName]
         if _curFrameImage == nil {
             _curFrameImage = NSImage(contentsOfFile: Bundle.main.path(forResource: frameImageName, ofType: "")!)
@@ -157,10 +157,10 @@ class SpeakingCharacterView: NSView {
             _curFrameIndex += 1
             _curFrameIndex %= _curFrameArray.count
             _expressionFrameTimer =
-                Timer(timeInterval: frameDictionary[CharacterExpressionFrame.DurationKey.rawValue] as! TimeInterval,
+                Timer(timeInterval: frameDictionary[CharacterExpressionFrame.durationKey.rawValue] as! TimeInterval,
                     target: self,
                     selector:
-                    #selector(SpeakingCharacterView.animateNextExpressionFrame),
+                    #selector(self.animateNextExpressionFrame),
                     userInfo: nil,
                     repeats: false)
         }
@@ -175,7 +175,7 @@ class SpeakingCharacterView: NSView {
     @objc private func startIdleExpression() {
         _idleStartTimer = nil
         
-        self.setExpression(.Idle)
+        self.setExpression(.idle)
     }
     
     /*----------------------------------------------------------------------------------------

@@ -14,7 +14,7 @@ You should not contact to Apple or SHLab(jp) about any faults caused by my trans
 ===========================================================================
 ## BUILD REQUIREMENTS:
 
-Xcode 9 beta 3
+Xcode 9.3
 
 ===========================================================================
 ## RUNTIME REQUIREMENTS:

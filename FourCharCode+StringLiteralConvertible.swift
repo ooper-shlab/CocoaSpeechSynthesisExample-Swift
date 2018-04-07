@@ -60,20 +60,20 @@ extension FourCharCode {
     
     public var fourCharString: String {
         let bytes: [UInt8] = [
-            UInt8(extendingOrTruncating: (self >> 24)),
-            UInt8(extendingOrTruncating: (self >> 16)),
-            UInt8(extendingOrTruncating: (self >> 8)),
-            UInt8(extendingOrTruncating: self),
+            UInt8(truncatingIfNeeded: (self >> 24)),
+            UInt8(truncatingIfNeeded: (self >> 16)),
+            UInt8(truncatingIfNeeded: (self >> 8)),
+            UInt8(truncatingIfNeeded: self),
             ]
         return String(bytes: bytes, encoding: .isoLatin1)!
     }
     
     public var possibleFourCharString: String {
         var bytes: [UInt8] = [
-            UInt8(extendingOrTruncating: (self >> 24)),
-            UInt8(extendingOrTruncating: (self >> 16)),
-            UInt8(extendingOrTruncating: (self >> 8)),
-            UInt8(extendingOrTruncating: self),
+            UInt8(truncatingIfNeeded: (self >> 24)),
+            UInt8(truncatingIfNeeded: (self >> 16)),
+            UInt8(truncatingIfNeeded: (self >> 8)),
+            UInt8(truncatingIfNeeded: self),
             ]
         for i in 0..<4 {
             if bytes[i] < 0x20 || bytes[i] > 0x7E {
