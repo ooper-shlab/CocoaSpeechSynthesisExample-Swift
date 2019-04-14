@@ -1157,7 +1157,7 @@ class SpeakingTextWindow: NSDocument {
      the document.
      ----------------------------------------------------------------------------------------*/
     override var windowNibName: NSNib.Name? {
-        return NSNib.Name("SpeakingTextWindow")
+        return "SpeakingTextWindow"
     }
     
     /*----------------------------------------------------------------------------------------
